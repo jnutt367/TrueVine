@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TrueVine</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body class="bg-blue-50 font-sans">
+
+  <!-- HEADER -->
+  <header class="bg-blue-800 text-white shadow p-4 flex items-center justify-between flex-wrap">
+    <div class="flex items-center space-x-2">
+      <img src="images/Logo-white-JLRpng.png" alt="Logo" class="h-20 w-20 rounded-full">
+      <h1 class="text-5xl font-bold">TrueVine</h1>
+    </div>
+    <div class="flex items-center space-x-4">
+      <button class="relative">
+        <span class="material-icons">notifications</span>
+        <span class="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
+      </button>
+      <div class="flex items-center space-x-2 cursor-pointer">
+        <div id="userAvatarHeader" class="w-10 h-10 rounded-full bg-blue-400 flex items-center justify-center font-bold">
+          J
+        </div>
+        <span id="usernameHeader" class="hidden md:inline font-semibold"></span>
+      </div>
+      <button id="logoutBtn" class="bg-red-500 px-3 py-1 rounded hover:bg-red-600 hidden">Logout</button>
+    </div>
+  </header>
+
+  <!-- LOGIN -->
+  <div id="loginDiv" class="max-w-md mx-auto p-4 bg-white rounded-2xl shadow my-6">
+    <h2 class="text-2xl font-bold text-blue-800 mb-2">👤 Enter Your Display Name</h2>
+    <input type="text" id="usernameInput" placeholder="Your name..." class="w-full border p-2 rounded-md mb-2">
+    <button id="loginBtn" class="bg-blue-600 text-white p-2 rounded w-full hover:bg-blue-700">Login</button>
+  </div>
+
+  <!-- DAILY VERSE -->
+  <section class="bg-blue-100 p-4 text-center italic rounded-lg mb-6 font-semibold max-w-2xl mx-auto">
+    “Trust in the Lord with all your heart and lean not on your own understanding...” – Proverbs 3:5-6
+  </section>
+
+  <!-- MAIN CONTENT -->
+  <main class="max-w-2xl mx-auto p-4 hidden" id="mainContent">
+
+    <!-- ACTION CARDS -->
+    <div class="bg-blue-50 p-4 rounded-2xl shadow mb-4 border-l-4 border-blue-300">
+      <h2 class="text-2xl font-bold text-blue-800 mb-2">📖 Daily Devotion</h2>
+      <p>Read a short devotion today to grow closer to Jesus.</p>
+      <button onclick="openDevotion()" class="bg-blue-400 text-white px-3 py-1 rounded hover:bg-blue-500 mt-2">Read Devotion</button>
+    </div>
+
+    <div class="bg-blue-50 p-4 rounded-2xl shadow mb-4 border-l-4 border-blue-300">
+      <h2 class="text-2xl font-bold text-blue-800 mb-2">🙏 Share a Testimony</h2>
+      <p>Encourage others by sharing what God has done in your life.</p>
+      <button onclick="openTestimony()" class="bg-blue-400 text-white px-3 py-1 rounded hover:bg-blue-500 mt-2">Share Testimony</button>
+    </div>
+
+    <div class="bg-blue-50 p-4 rounded-2xl shadow mb-4 border-l-4 border-blue-300">
+      <h2 class="text-2xl font-bold text-blue-800 mb-2">💬 Join Discussion</h2>
+      <p>Engage with fellow believers in meaningful Scripture-based discussions.</p>
+      <button onclick="location.href='discussions.html'" class="bg-blue-400 text-white px-3 py-1 rounded hover:bg-blue-500 mt-2">Join Now</button>
+    </div>
+
+    <!-- CREATE POST -->
+    <div class="bg-white p-4 rounded-2xl shadow mb-4 border-l-4 border-blue-400">
+      <textarea id="postInput" class="w-full border p-2 rounded-md" placeholder="Share what God is putting on your heart..."></textarea>
+      <button id="postBtn" class="bg-blue-600 text-white p-2 rounded w-full mt-2 hover:bg-blue-700">Post</button>
+    </div>
+
+    <!-- FEED -->
+    <div id="feed"></div>
+
+    <!-- PRAYER WALL -->
+    <div class="mt-6">
+      <h2 class="text-2xl font-bold text-blue-800 mb-2">🙏 Prayer Wall</h2>
+      <div class="bg-white p-4 rounded-2xl shadow mb-4 border-l-4 border-blue-400">
+        <textarea id="prayerInput" class="w-full border p-2 rounded-md" placeholder="Share a prayer request..."></textarea>
+        <button id="prayerBtn" class="bg-blue-500 text-white p-2 rounded w-full mt-2 hover:bg-blue-600">Submit Prayer</button>
+      </div>
+      <div id="prayerList" class="mt-4"></div>
+    </div>
+
+    <!-- Clear All Button -->
+    <button onclick="clearAll()" class="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 mt-4">
+      Clear All Posts & Prayers
+    </button>
+
+    <!-- YOUTUBE SECTION -->
+    <div class="mt-6">
+      <h2 class="text-2xl font-bold text-blue-800 mb-2">📺 Latest from Jesus Love Revealed</h2>
+      <iframe width="100%" height="315" src="https://www.youtube.com/embed/H7uxnO3uR94?si=Mrn-WnUDT3-0BObQ" 
+        title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </div>
+
+  </main>
+
+  <!-- DEVOTION MODAL -->
+  <div id="devotionModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center">
+    <div class="bg-white p-6 rounded-2xl shadow max-w-md w-full relative">
+      <button onclick="closeDevotion()" class="absolute top-2 right-2 text-gray-500 hover:text-gray-800">✖</button>
+      <h2 class="text-xl font-bold mb-2">📖 Daily Devotion</h2>
+      <p>“God is with you today. Trust in Him, seek His guidance, and let His love shine through your actions.”</p>
+    </div>
+  </div>
+
+  <!-- TESTIMONY MODAL -->
+  <div id="testimonyModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center">
+    <div class="bg-white p-6 rounded-2xl shadow max-w-md w-full relative">
+      <button onclick="closeTestimony()" class="absolute top-2 right-2 text-gray-500 hover:text-gray-800">✖</button>
+      <h2 class="text-xl font-bold mb-2">🙏 Share Your Testimony</h2>
+      <textarea id="testimonyInput" class="w-full border p-2 rounded-md mb-2" placeholder="Write your testimony..."></textarea>
+      <button onclick="submitTestimony()" class="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 w-full">Submit</button>
+    </div>
+  </div>
+
+<script>
+  // LOGIN
+  const loginDiv=document.getElementById('loginDiv');
+  const mainContent=document.getElementById('mainContent');
+  const logoutBtn=document.getElementById('logoutBtn');
+  const usernameHeader=document.getElementById('usernameHeader');
+  const userAvatarHeader=document.getElementById('userAvatarHeader');
+  let username=localStorage.getItem('username')||'';
+
+  if(username){ loginDiv.style.display='none'; mainContent.classList.remove('hidden'); logoutBtn.classList.remove('hidden'); usernameHeader.textContent=username; userAvatarHeader.textContent=username.charAt(0).toUpperCase(); }
+
+  document.getElementById('loginBtn').addEventListener('click',()=>{
+    const input=document.getElementById('usernameInput'); if(!input.value.trim()) return alert('Enter a name');
+    username=input.value.trim(); localStorage.setItem('username',username);
+    loginDiv.style.display='none'; mainContent.classList.remove('hidden'); logoutBtn.classList.remove('hidden');
+    usernameHeader.textContent=username; userAvatarHeader.textContent=username.charAt(0).toUpperCase();
+  });
+
+  logoutBtn.addEventListener('click',()=>{ localStorage.removeItem('username'); location.reload(); });
+
+  // MODALS
+  function openDevotion(){ if(!username) return alert('Please log in first'); document.getElementById('devotionModal').classList.remove('hidden'); }
+  function closeDevotion(){ document.getElementById('devotionModal').classList.add('hidden'); }
+  function openTestimony(){ if(!username) return alert('Please log in first'); document.getElementById('testimonyModal').classList.remove('hidden'); }
+  function closeTestimony(){ document.getElementById('testimonyModal').classList.add('hidden'); }
+
+  function submitTestimony(){
+    const input=document.getElementById('testimonyInput'); 
+    if(!input.value.trim()) return alert('Enter testimony');
+    alert(`Thank you for sharing, ${username}!`);
+    input.value=''; closeTestimony();
+  }
+</script>
+
+</body>
+</html>

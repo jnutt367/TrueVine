@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Discussions - TrueVine</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-blue-50 font-sans">
+
+  <header class="bg-blue-800 text-white shadow p-4 flex items-center justify-between">
+    <h1 class="text-2xl font-bold cursor-pointer" onclick="location.href='index.html'">TrueVine Discussions</h1>
+    <div class="flex items-center space-x-2">
+      <div id="userAvatarHeader" class="w-10 h-10 rounded-full bg-blue-400 flex items-center justify-center font-bold">J</div>
+      <span id="usernameHeader" class="font-semibold"></span>
+    </div>
+  </header>
+
+  <main class="max-w-2xl mx-auto p-4">
+    <div class="bg-white p-4 rounded-2xl shadow mb-4 border-l-4 border-blue-400">
+      <textarea id="discussionInput" class="w-full border p-2 rounded-md" placeholder="Start a new discussion..."></textarea>
+      <button id="discussionBtn" class="bg-blue-600 text-white px-3 py-1 rounded w-full mt-2 hover:bg-blue-700">Post Discussion</button>
+    </div>
+
+    <div id="discussionFeed"></div>
+  </main>
+
+<script>
+  // LOGIN
+  let username=localStorage.getItem('username')||'';
+  if(username){ document.getElementById('usernameHeader').textContent=username; document.getElementById('userAvatarHeader').textContent=username.charAt(0).toUpperCase(); }
+  else { alert('Please login first'); location.href='index.html'; }
+
+  // STORAGE
+  let discussions=JSON.parse(localStorage.getItem('discussions'))||[];
+  const discussionFeed=document.getElementById('discussionFeed');
+
+  document.getElementById('discussionBtn').addEventListener('click',()=>{
+    const input=document.getElementById('discussionInput'); 
+    if(!input.value.trim()) return alert('Enter discussion');
+    discussions.unshift({user:username,content:input.value,likes:0,comments:[],date:new Date()});
+    localStorage.setItem('discussions',JSON.stringify(discussions));
+    input.value=''; renderDiscussions();
+  });
+
+  function renderDiscussions(){
+    discussionFeed.innerHTML = discussions.map((d,i)=>`
+      <div class="bg-blue-50 p-4 rounded-2xl shadow mb-4 border-l-4 border-blue-300">
+        <p class="font-semibold">${d.user}</p>
+        <p>${d.content}</p>
+        <div class="flex space-x-2 mt-2">
+          <button onclick="likeDiscussion(${i})" class="bg-blue-400 text-white px-2 py-1 rounded hover:bg-blue-500">👍 Like (${d.likes||0})</button>
+          ${d.user===username?`<button onclick="deleteDiscussion(${i})" class="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600">Delete</button>`:''}
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function likeDiscussion(i){ discussions[i].likes+=1; localStorage.setItem('discussions',JSON.stringify(discussions)); renderDiscussions(); }
+  function deleteDiscussion(i){ if(confirm('Delete discussion?')){ discussions.splice(i,1); localStorage.setItem('discussions',JSON.stringify(discussions)); renderDiscussions(); }}
+
+  renderDiscussions();
+</script>
+
+</body>
+</html>
