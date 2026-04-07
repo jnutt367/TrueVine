@@ -51,26 +51,26 @@
   </div>
 
   <!-- DAILY VERSE -->
-  <section class="bg-blue-100 p-4 text-center italic rounded-lg mb-6 font-semibold max-w-2xl mx-auto">
+  <section class="bg-blue-400 p-4 text-center italic rounded-lg mb-6 font-semibold max-w-2xl mx-auto">
     “Trust in the Lord with all your heart and lean not on your own understanding...” – Proverbs 3:5-6
   </section>
 
   <main class="max-w-2xl mx-auto p-4 hidden" id="mainContent">
 
     <!-- ACTION CARDS -->
-    <div class="bg-blue-50 p-4 rounded-2xl shadow mb-4 border-l-4 border-blue-300">
+    <div class="bg-blue-300 p-4 rounded-2xl shadow mb-4 border-l-4 border-blue-300">
       <h2 class="text-2xl font-bold text-blue-800 mb-2">📖 Daily Devotion</h2>
       <p>Read a short devotion today to grow closer to Jesus.</p>
       <button onclick="openDevotion()" class="bg-blue-400 text-white px-3 py-1 rounded hover:bg-blue-500 mt-2">Read Devotion</button>
     </div>
 
-    <div class="bg-blue-50 p-4 rounded-2xl shadow mb-4 border-l-4 border-blue-300">
+    <div class="bg-blue-200 p-4 rounded-2xl shadow mb-4 border-l-4 border-blue-300">
       <h2 class="text-2xl font-bold text-blue-800 mb-2">🙏 Share a Testimony</h2>
       <p>Encourage others by sharing what God has done in your life.</p>
       <button onclick="openTestimony()" class="bg-blue-400 text-white px-3 py-1 rounded hover:bg-blue-500 mt-2">Share Testimony</button>
     </div>
 
-    <div class="bg-blue-50 p-4 rounded-2xl shadow mb-4 border-l-4 border-blue-300">
+    <div class="bg-blue-100 p-4 rounded-2xl shadow mb-4 border-l-4 border-blue-300">
       <h2 class="text-2xl font-bold text-blue-800 mb-2">💬 Join Discussion</h2>
       <p>Engage with fellow believers in meaningful Scripture-based discussions.</p>
       <a href="discussions.html" class="bg-blue-400 text-white px-3 py-1 rounded hover:bg-blue-500 mt-2 inline-block">Join Now</a>
@@ -117,7 +117,7 @@
 
   <!-- MODALS -->
   <div id="devotionModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center">
-    <div class="bg-white p-6 rounded-2xl shadow max-w-lg w-full relative">
+    <div class="bg-blue-100 p-6 rounded-2xl shadow max-w-lg w-full relative border-l-4 border-blue-300 ">
       <button onclick="closeDevotion()" class="absolute top-2 right-2 text-gray-500 hover:text-gray-800">✖</button>
       <h2 class="text-xl font-bold mb-2">Daily Devotion</h2>
       <p>“Today, remember that God’s love is greater than any fear. Trust in Him and He will guide your steps.”</p>
@@ -125,7 +125,7 @@
   </div>
 
   <div id="testimonyModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center">
-    <div class="bg-white p-6 rounded-2xl shadow max-w-lg w-full relative">
+    <div class="bg-blue-100 p-6 rounded-2xl shadow max-w-lg w-full relative border-l-4 border-blue-300 ">
       <button onclick="closeTestimony()" class="absolute top-2 right-2 text-gray-500 hover:text-gray-800">✖</button>
       <h2 class="text-xl font-bold mb-2">Share Your Testimony</h2>
       <textarea id="testimonyInput" class="w-full border p-2 rounded-md mb-2" placeholder="Share what God has done in your life..."></textarea>
@@ -135,7 +135,7 @@
 
   <!-- PROFILE MODAL -->
   <div id="profileModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center">
-    <div class="bg-white p-6 rounded-2xl shadow max-w-sm w-full relative">
+    <div class="bg-blue-100 p-6 rounded-2xl shadow max-w-lg w-full relative border-l-4 border-blue-300 ">
       <button onclick="closeProfile()" class="absolute top-2 right-2 text-gray-500 hover:text-gray-800">✖</button>
       <div class="flex flex-col items-center">
         <div id="profileAvatar" class="w-20 h-20 rounded-full flex items-center justify-center text-white font-bold text-2xl mb-2"></div>
