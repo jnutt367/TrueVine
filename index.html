@@ -3,355 +3,303 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TrueVine</title>
+  <title>TruVine | Jesus Love Revealed</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <style>
+    /* Netflix Hover Effect */
+    .video-card { transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); cursor: pointer; position: relative; overflow: hidden; border-radius: 1rem; background: #000; }
+    .video-card:hover { transform: scale(1.05); z-index: 10; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4); }
+    .video-overlay { background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 100%); opacity: 0; transition: opacity 0.3s; }
+    .video-card:hover .video-overlay { opacity: 1; }
+    
+    @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    .feed-item { animation: slideUp 0.5s ease forwards; }
+
+    .video-container { position: relative; padding-bottom: 56.25%; height: 0; }
+    .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+    
+    .delete-btn { opacity: 0.3; transition: opacity 0.2s, color 0.2s; }
+    .delete-btn:hover { opacity: 1; color: #ef4444; }
+  </style>
 </head>
-<body class="bg-slate-200 font-sans">
+<body class="bg-slate-100 font-sans text-slate-900">
 
   <!-- HEADER -->
-  <header class="bg-slate-700 text-white shadow p-4 flex items-center justify-between flex-wrap position-sticky">
-    <div class="flex items-center space-x-2 mt-10">
-      <img src="images/Logo-white-JLRpng.png" alt="Logo" class="h-10 w-10 rounded-full">
-      <h1 class="text-2xl font-bold">TruVine</h1>
-    </div>
-    
-    <!-- Online status legend -->
-    <div class="flex items-center space-x-2 ml-4">
-      <span class="w-3 h-3 bg-green-500 rounded-full"></span><span class="text-white text-sm">Online</span>
-      <span class="w-3 h-3 bg-yellow-400 rounded-full"></span><span class="text-white text-sm">Away</span>
-      <span class="w-3 h-3 bg-red-500 rounded-full"></span><span class="text-white text-sm">Busy</span>
-      <span class="w-3 h-3 bg-gray-400 rounded-full"></span><span class="text-white text-sm">Offline</span>
-    </div>
-
-    <div class="flex-1 mx-4">
-      <input id="searchInput" type="text" placeholder="Search posts or prayers..."
-        class="w-full rounded-full p-2 px-4 text-black focus:outline-none focus:ring-2 focus:ring-blue-300">
-    </div>
-    <div class="flex items-center space-x-4">
-      <button class="relative">
-        <span class="material-icons">notifications</span>
-        <span class="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
-      </button>
-      <div class="flex items-center space-x-2 cursor-pointer">
-        <div id="userAvatarHeader" class="w-10 h-10 rounded-full bg-blue-400 flex items-center justify-center font-bold">
-          J
-        </div>
-        <span id="usernameHeader" class="hidden md:inline font-semibold"></span>
+  <header class="bg-slate-900 text-white p-4 sticky top-0 z-50 shadow-2xl">
+    <div class="max-w-6xl mx-auto flex items-center justify-between">
+      <div class="flex items-center space-x-2">
+        <div class="bg-blue-600 p-1 rounded-lg"><span class="material-icons text-white">account_tree</span></div>
+        <h1 class="text-2xl font-black tracking-tighter uppercase italic">TruVine</h1>
       </div>
-      <button id="logoutBtn" class="bg-red-500 px-3 py-1 rounded hover:bg-red-600 hidden">Logout</button>
+
+      <nav class="hidden md:flex space-x-6 text-xs font-black uppercase tracking-widest text-slate-400">
+        <a href="https://www.youtube.com/@jesusloverevealed" target="_blank" class="hover:text-blue-400">YouTube</a>
+        <a href="https://www.patreon.com/jesusloverevealed" target="_blank" class="text-orange-500">Patreon Members</a>
+      </nav>
+
+      <div id="userInfo" class="flex items-center space-x-3">
+        <span id="userNameDisplay" class="hidden md:block text-[10px] font-bold text-slate-500 uppercase tracking-widest"></span>
+        <button onclick="logout()" class="w-9 h-9 rounded-full bg-blue-500 flex items-center justify-center font-black text-sm ring-2 ring-blue-400/30 hover:bg-red-500 transition-colors" title="Logout">
+            <span id="userInitial">?</span>
+        </button>
+      </div>
     </div>
   </header>
 
   <!-- LOGIN -->
-  <div id="loginDiv" class="max-w-md mx-auto p-4 bg-white rounded-2xl shadow my-6">
-    <h2 class="text-2xl font-bold text-blue-800 mb-2">👤 Enter Your Display Name</h2>
-    <input type="text" id="usernameInput" placeholder="Your name..." class="w-full border p-2 rounded-md mb-2">
-    <button id="loginBtn" class="bg-blue-600 text-white p-2 rounded w-full hover:bg-blue-700">Login</button>
+  <div id="loginOverlay" class="fixed inset-0 bg-slate-950 z-[100] flex items-center justify-center p-4">
+    <div class="bg-white p-10 rounded-[2.5rem] shadow-2xl max-w-sm w-full text-center">
+      <h2 class="text-3xl font-black text-slate-900 mb-2">Welcome</h2>
+      <p class="text-slate-500 mb-8 text-sm">Join the <b>Jesus Love Revealed</b> community.</p>
+      <input type="text" id="nameInput" placeholder="Your Name" class="w-full bg-slate-100 p-4 rounded-2xl mb-4 outline-none focus:ring-2 focus:ring-blue-500 text-center font-bold">
+      <button onclick="login()" class="w-full bg-blue-600 text-white py-4 rounded-2xl font-black shadow-lg hover:bg-blue-700 transition">LAUNCH APP</button>
+    </div>
   </div>
 
-  <!-- DAILY VERSE -->
-  <section class="bg-blue-100 p-4 text-center italic rounded-lg mb-6 font-semibold max-w-2xl mx-auto border-l-4 border-blue-500 mt-5">
-    “Trust in the Lord with all your heart and lean not on your own understanding...” – Proverbs 3:5-6
-  </section>
+  <main class="max-w-5xl mx-auto p-4 md:py-10">
 
-  
-
-  
-
-  <main class="max-w-2xl mx-auto p-4 hidden" id="mainContent">
-    
-    <!-- ACTION CARDS -->
-    <div class="bg-blue-300 p-4 rounded-2xl shadow mb-4 border-l-4 border-blue-800">
-      <h2 class="text-2xl font-bold text-blue-800 mb-2">📖 Daily Devotional</h2>
-      <p>Read a short devotion today to grow closer to Jesus.</p>
-      <button onclick="openDevotion()" class="bg-blue-400 text-white px-3 py-1 rounded hover:bg-blue-500 mt-2">Read Devotion</button>
-    </div>
-
-    <div class="mt-6">
-      <h2 class="text-2xl font-bold text-blue-800 mb-2">📹 Mike Malagies: Rap song about God</h2>
-      <iframe  class="mb-2 rounded-2xl shadow mb-4 border-l-4 border-blue-800 " width="100%" height="315" src="https://www.youtube.com/embed/9S7wJvR93yE?si=Rj69E4RnNGZXxoPg" 
-    title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-    <h5 class="text-1xl font-bold text-blue-800 mb-2"> Go check this kid out! He seems to be on fire for the Lord!
-    </h5>
-  
-    </div>
-
-
-    <div class="bg-blue-200 p-4 rounded-2xl shadow mb-4 border-l-4 border-blue-500">
-      <h2 class="text-2xl font-bold text-blue-800 mb-2">🙏 Share a Testimony</h2>
-      <p>Encourage others by sharing what God has done in your life.</p>
-      <button onclick="openTestimony()" class="bg-blue-400 text-white px-3 py-1 rounded hover:bg-blue-500 mt-2">Share Testimony</button>
-    </div>
-
-<!-- YOUTUBE SECTION -->
-<div class="mt-6">
-  <h2 class="text-2xl font-bold text-blue-800 mb-2">📹 Latest from Jesus Love Revealed</h2>
-  <iframe class="mb-4 rounded-2xl shadow mb-4 border-l-4 border-blue-800" width="100%" height="315" src="https://pie.yt/?v=https://youtube.com/shorts/Fgjv6AcO_0I?si=jubdg2_McSm6rGSM" 
-    title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-</div>
-
-
-
-
-    <div class="bg-blue-100 p-4 rounded-2xl shadow mb-4 border-l-4 border-blue-300">
-      <h2 class="text-2xl font-bold text-blue-800 mb-2">💬 Join Discussion</h2>
-      <p>Engage with fellow believers in meaningful Scripture-based discussions.</p>
-      <a href="discussions.html" class="bg-blue-400 text-white px-3 py-1 rounded hover:bg-blue-500 mt-2 inline-block">Join Now</a>
-    </div>
-
-    <!-- CREATE POST -->
-    <div class="bg-white p-4 rounded-2xl shadow mb-4 border-l-4 border-blue-400">
-      <textarea id="postInput" class="w-full border p-2 rounded-md" placeholder="Share what God is putting on your heart..."></textarea>
-      <button id="postBtn" class="bg-blue-600 text-white p-2 rounded w-full mt-2 hover:bg-blue-700">Post</button>
-    </div>
-    
-
-
-
-
-    <!-- UNIFIED FEED -->
-    <div id="feed"></div>
-
-    <!-- PRAYER WALL -->
-    <div class="mt-6">
-      <h2 class="text-2xl font-bold text-blue-800 mb-2">🙏 Prayer Wall</h2>
-      <div class="bg-white p-4 rounded-2xl shadow mb-4 border-l-4 border-blue-400">
-        <textarea id="prayerInput" class="w-full border p-2 rounded-md" placeholder="Share a prayer request..."></textarea>
-        <button id="prayerBtn" class="bg-blue-500 text-white p-2 rounded w-full mt-2 hover:bg-blue-600">Submit Prayer</button>
+    <!-- NETFLIX VIDEO GRID -->
+    <section class="mb-16">
+      <h2 class="text-sm font-black text-slate-400 uppercase tracking-[0.3em] mb-6 flex items-center">
+        <span class="bg-red-600 w-1 h-4 mr-2"></span> Jesus Love Revealed Library
+      </h2>
+      
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+        <!-- Video 1-6 Grid -->
+        <div class="video-card"><div class="video-container"><iframe width="100%" height="315" src="https://www.youtube.com/embed/H7uxnO3uR94?si=iunEVQm5KUTf2ewU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></iframe></div></div>
+        <div class="video-card"><div class="video-container"><iframe width="100%" height="315" src="https://www.youtube.com/embed/OQCb-0qLZbM?si=AeKUFL0hJSadVth_" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div></div>
+        <div class="video-card"><div class="video-container"><iframe width="100%" height="315" src="https://www.youtube.com/embed/Fgjv6AcO_0I" title="He is not here, He is RISEN!" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div></div>
+        <div class="video-card"><div class="video-container"><iframe width="100%" height="315" src="https://www.youtube.com/embed/_0oyCBtVbNs" title="I will, send out an army, to find... you, in the middle of the darkness.  I will rescue you." frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div></div>
+        <div class="video-card"><div class="video-container"><iframe width="100%" height="315" src="https://www.youtube.com/embed/0AldLxPNV2E" title="God, I put My trust in YOU." frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div></div>
+        <div class="video-card"><div class="video-container"><iframe width="100%" height="315" src="https://www.youtube.com/embed/WlmKeOjGyuM" title="You restore my soul." frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div></div>
       </div>
-      <div id="prayerList" class="mt-4"></div>
+    </section>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        <!-- SIDEBAR ACTIONS -->
+        <div class="space-y-4">
+            <div class="bg-white p-6 rounded-[2rem] shadow-sm border border-slate-200">
+                <h3 class="font-black text-slate-800 mb-4 uppercase text-xs tracking-widest">Create Content</h3>
+                <div class="space-y-2">
+                    <button onclick="setActiveForm('post')" class="w-full text-left p-4 rounded-2xl bg-blue-50 text-blue-700 font-bold flex items-center hover:bg-blue-100 transition"><span class="material-icons mr-2">edit</span> Regular Post</button>
+                    <button onclick="setActiveForm('prayer')" class="w-full text-left p-4 rounded-2xl bg-orange-50 text-orange-700 font-bold flex items-center hover:bg-orange-100 transition"><span class="material-icons mr-2">front_hand</span> Prayer Wall</button>
+                    <button onclick="setActiveForm('testimony')" class="w-full text-left p-4 rounded-2xl bg-green-50 text-green-700 font-bold flex items-center hover:bg-green-100 transition"><span class="material-icons mr-2">auto_awesome</span> Testimony</button>
+                </div>
+            </div>
+
+            <div class="bg-orange-500 p-6 rounded-[2rem] text-white shadow-xl">
+                <h3 class="font-black mb-1 italic text-xl uppercase tracking-tighter">Support Us</h3>
+                <p class="text-xs opacity-90 mb-4 font-medium">Join the inner circle on Patreon.</p>
+                <a href="https://www.patreon.com/jesusloverevealed" target="_blank" class="inline-block bg-white text-orange-600 px-6 py-2 rounded-xl font-black text-xs uppercase">Join Patreon</a>
+            </div>
+
+            <button onclick="showDevotion()" class="w-full bg-slate-900 text-white p-6 rounded-[2rem] font-black flex items-center justify-between hover:bg-slate-800 transition">
+                <span>📖 DAILY WORD</span>
+                <span class="material-icons">auto_stories</span>
+            </button>
+        </div>
+
+        <!-- MAIN FEED -->
+        <div class="lg:col-span-2 space-y-6">
+            
+            <!-- CREATION BOX -->
+            <div id="formBox" class="bg-white p-6 rounded-[2.5rem] shadow-xl border-2 border-blue-500 transition-all">
+                <h2 id="formTitle" class="text-xl font-black mb-4 uppercase tracking-tighter text-blue-600">Share a Thought</h2>
+                <textarea id="mainInput" class="w-full bg-slate-50 p-6 rounded-3xl outline-none focus:ring-1 focus:ring-slate-300 transition text-lg" rows="3" placeholder="What is God speaking to you?"></textarea>
+                <div class="flex justify-between items-center mt-4">
+                    <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Posting as <span id="authorName" class="text-blue-500">User</span></span>
+                    <button id="submitBtn" onclick="submitData()" class="bg-blue-600 text-white px-10 py-4 rounded-2xl font-black shadow-lg uppercase text-xs tracking-widest hover:scale-105 transition">Submit Feed</button>
+                </div>
+            </div>
+
+            <!-- THE UNIQUE FEED -->
+            <div id="communityFeed" class="space-y-6"></div>
+
+            <!-- COURSE LINK -->
+            <div class="bg-blue-900 p-10 rounded-[3rem] text-white text-center shadow-2xl relative overflow-hidden">
+                <div class="relative z-10">
+                    <h2 class="text-3xl font-black mb-2 uppercase tracking-tighter italic">5-Week Bible Habit</h2>
+                    <p class="text-blue-200 mb-8 max-w-sm mx-auto font-medium">Build a rock-solid daily walk with God starting today.</p>
+                    <a href="https://jesus-love-revealed.vercel.app/course-index.html" class="inline-block bg-white text-blue-900 px-10 py-4 rounded-2xl font-black uppercase text-xs tracking-widest hover:bg-blue-50 transition">Start Free Course</a>
+                </div>
+                <span class="material-icons absolute -bottom-10 -right-10 text-[15rem] opacity-5">menu_book</span>
+            </div>
+
+            <div class="py-10 text-center">
+                <button onclick="resetApp()" class="text-slate-300 text-[9px] font-bold uppercase tracking-[0.3em] hover:text-red-500 transition">Reset Device Database</button>
+            </div>
+        </div>
     </div>
-<!-- YOUTUBE SECTION -->
-
-
-<div class="mt-6">
-  <h2 class="text-2xl font-bold text-blue-800 mb-2">📹 Jesus Love Revealed (Proverbs)</h2>
-  <iframe class="rounded-2xl shadow mb-4 border-l-4 border-blue-800" width="100%" height="315" src="https://www.youtube.com/embed/iccoD8zxbqw?si=HNjOZhtdq2R9tvMH" 
-  title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-
-</div>
-
-
-
-<div class="mt-6">
-  <h2 class="text-2xl font-bold text-blue-800 mb-2">📹 More from Jesus Love Revealed</h2>
-  <iframe class="rounded-2xl shadow mb-4 border-l-4 border-blue-800" width="100%" height="315" src="https://pie.yt/?v=https://youtube.com/shorts/jOjT2m2tOPE?si=oI5QigFjByGh9EbC" 
-    title="YouTube video player" frameborder="10" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-</div>
-    <!-- Clear All Button -->
-    <button onclick="clearAll()" class="bg-red-600 mb-10 text-white px-3 py-1 rounded hover:bg-red-700 mt-4">
-      Clear All Posts & Prayers
-    </button>
-
-    <div class="bg-white p-4 rounded-2xl shadow mb-4 border-l-4 border-blue-400">
-        <textarea id="postInput" class="w-full border p-2 rounded-md" placeholder="This is a 5 week bible habit building course, yours for free!"></textarea>
-        <a href="https://jesus-love-revealed.vercel.app/course-index.html"><button id="postBtn" class="bg-blue-600 text-white p-2 rounded w-full mt-2 hover:bg-blue-700">Go To Building a Bible Habit</button></a>
-      </div>
-
-    <!-- YOUTUBE SECTION -->
-    <div class="mt-6">
-      <h2 class="text-2xl font-bold text-blue-800 mb-2">📹 More from Jesus Love Revealed</h2>
-      <iframe class="rounded-2xl shadow mb-20 border-l-4 border-blue-800" width="100%" height="315" src="https://www.youtube.com/embed/H7uxnO3uR94?si=Mrn-WnUDT3-0BObQ" 
-        title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-    </div>
-
-
-
-
   </main>
 
-  <!-- MODALS -->
-  <div id="devotionModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center">
-    <div class="bg-blue-100 p-6 rounded-2xl shadow max-w-lg w-full relative border-l-4 border-blue-300 ">
-      <button onclick="closeDevotion()" class="absolute top-2 right-2 text-gray-500 hover:text-gray-800">✖</button>
-      <h2 class="text-xl font-bold mb-2">Daily Devotion</h2>
-      <p>“Today, remember that God’s love is greater than any fear. Trust in Him and He will guide your steps.”</p>
+  <!-- DEVOTION MODAL -->
+  <div id="devotionModal" class="fixed inset-0 bg-slate-900/90 backdrop-blur-md z-[200] hidden items-center justify-center p-4">
+    <div class="bg-white p-10 rounded-[3rem] max-w-lg w-full text-center shadow-2xl">
+      <span class="material-icons text-blue-600 text-5xl mb-4">stars</span>
+      <h2 class="text-2xl font-black mb-4 uppercase tracking-tighter">Today's Devotional</h2>
+      <p id="devotionText" class="text-xl text-slate-700 font-serif italic leading-relaxed mb-8"></p>
+      <button onclick="closeDevotion()" class="w-full bg-slate-900 text-white py-5 rounded-2xl font-black uppercase tracking-widest">Amen</button>
     </div>
   </div>
 
-  <div id="testimonyModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center">
-    <div class="bg-blue-100 p-6 rounded-2xl shadow max-w-lg w-full relative border-l-4 border-blue-300 ">
-      <button onclick="closeTestimony()" class="absolute top-2 right-2 text-gray-500 hover:text-gray-800">✖</button>
-      <h2 class="text-xl font-bold mb-2">Share Your Testimony</h2>
-      <textarea id="testimonyInput" class="w-full border p-2 rounded-md mb-2" placeholder="Share what God has done in your life..."></textarea>
-      <button onclick="submitTestimony()" class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">Submit</button>
-    </div>
-  </div>
+  <script>
+    // --- APP CORE ---
+    let currentUser = localStorage.getItem('truvine_user') || null;
+    let database = JSON.parse(localStorage.getItem('truvine_db')) || [];
+    let currentType = 'post';
 
-  <!-- PROFILE MODAL -->
-  <div id="profileModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center">
-    <div class="bg-blue-100 p-6 rounded-2xl shadow max-w-lg w-full relative border-l-4 border-blue-300 ">
-      <button onclick="closeProfile()" class="absolute top-2 right-2 text-gray-500 hover:text-gray-800">✖</button>
-      <div class="flex flex-col items-center">
-        <div id="profileAvatar" class="w-20 h-20 rounded-full flex items-center justify-center text-white font-bold text-2xl mb-2"></div>
-        <h2 id="profileName" class="text-xl font-bold mb-1"></h2>
-        <p id="profileStatus" class="text-gray-600 mb-2"></p>
-        <p>Member of Jesus TruVine community</p>
-      </div>
-    </div>
-  </div>
+    const devotions = [
+        "“Be still, and know that I am God.” - Psalm 46:10",
+        "“Your word is a lamp to my feet and a light to my path.” - Psalm 119:105",
+        "“But seek first the kingdom of God and his righteousness...” - Matthew 6:33"
+    ];
 
-<script>
-  // COLORS
-  const softBlues = ['#e0f2fe','#bae6fd','#bfdbfe','#dbeafe','#f0f9ff'];
-  function getColorForName(name){
-    const colors=['#60a5fa','#3b82f6','#2563eb','#93c5fd','#bfdbfe','#1e40af','#0ea5e9','#3b82f6'];
-    let sum=0; for(let i=0;i<name.length;i++) sum+=name.charCodeAt(i);
-    return colors[sum%colors.length];
-  }
-  function getRandomStatus(){ const statuses=['online','offline','away','busy']; return statuses[Math.floor(Math.random()*statuses.length)]; }
-
-  // TIME AGO
-  function timeAgo(date){
-    const now=new Date(); const diff=Math.floor((now-new Date(date))/1000);
-    if(diff<60) return `${diff} sec${diff!==1?'s':''} ago`;
-    const mins=Math.floor(diff/60); if(mins<60) return `${mins} min${mins!==1?'s':''} ago`;
-    const hrs=Math.floor(mins/60); if(hrs<24) return `${hrs} hr${hrs!==1?'s':''} ago`;
-    const days=Math.floor(hrs/24); return `${days} day${days!==1?'s':''} ago`;
-  }
-
-  // SIMULATED USERS
-  let simulatedUsers = ['Sarah','David','Mary','John','Rebecca','Paul','Anna','Michael','Grace'].map(name=>({name,color:getColorForName(name),status:getRandomStatus()}));
-
-  // LOGIN
-  const loginDiv=document.getElementById('loginDiv');
-  const mainContent=document.getElementById('mainContent');
-  const logoutBtn=document.getElementById('logoutBtn');
-  const usernameHeader=document.getElementById('usernameHeader');
-  const userAvatarHeader=document.getElementById('userAvatarHeader');
-  let username=localStorage.getItem('username')||'';
-
-  if(username){ loginDiv.style.display='none'; mainContent.classList.remove('hidden'); logoutBtn.classList.remove('hidden'); usernameHeader.textContent=username; userAvatarHeader.textContent=username.charAt(0).toUpperCase(); userAvatarHeader.style.backgroundColor=getColorForName(username); }
-
-  document.getElementById('loginBtn').addEventListener('click',()=>{
-    const input=document.getElementById('usernameInput'); if(!input.value.trim()) return alert('Enter a name');
-    username=input.value.trim(); localStorage.setItem('username',username);
-    loginDiv.style.display='none'; mainContent.classList.remove('hidden'); logoutBtn.classList.remove('hidden');
-    usernameHeader.textContent=username; userAvatarHeader.textContent=username.charAt(0).toUpperCase();
-    userAvatarHeader.style.backgroundColor=getColorForName(username);
-  });
-
-  logoutBtn.addEventListener('click',()=>{ localStorage.removeItem('username'); location.reload(); });
-
-  // STORAGE
-  let posts=JSON.parse(localStorage.getItem('posts'))||[];
-  let prayers=JSON.parse(localStorage.getItem('prayers'))||[];
-  let testimonies=JSON.parse(localStorage.getItem('testimonies'))||[];
-  const feedEl=document.getElementById('feed');
-  const prayerListEl=document.getElementById('prayerList');
-
-  // ADD
-  function addPost(){ 
-    const input=document.getElementById('postInput'); if(!input.value.trim()) return;
-    posts.unshift({user:username,content:input.value,date:new Date(), likes:0, comments:[]}); 
-    localStorage.setItem('posts',JSON.stringify(posts)); input.value=''; renderFeed();
-  }
-  function addPrayer(){ 
-    const input=document.getElementById('prayerInput'); if(!input.value.trim()) return;
-    prayers.unshift({user:username,content:input.value,prayedCount:0, likes:0, comments:[]}); 
-    localStorage.setItem('prayers',JSON.stringify(prayers)); input.value=''; renderFeed();
-  }
-
-  document.getElementById('postBtn').addEventListener('click',addPost);
-  document.getElementById('prayerBtn').addEventListener('click',addPrayer);
-
-  // DEVOTION MODAL
-  function openDevotion(){ if(!username) return alert('Login first'); document.getElementById('devotionModal').classList.remove('hidden'); }
-  function closeDevotion(){ document.getElementById('devotionModal').classList.add('hidden'); }
-
-  // TESTIMONY MODAL
-  function openTestimony(){ if(!username) return alert('Login first'); document.getElementById('testimonyModal').classList.remove('hidden'); }
-  function closeTestimony(){ document.getElementById('testimonyModal').classList.add('hidden'); }
-  function submitTestimony(){ 
-    const val=document.getElementById('testimonyInput').value; if(!val.trim()) return;
-    testimonies.unshift({user:username,content:val,date:new Date(), likes:0, comments:[]}); 
-    localStorage.setItem('testimonies',JSON.stringify(testimonies));
-    document.getElementById('testimonyInput').value='';
-    closeTestimony();
-    renderFeed();
-  }
-
-  // PROFILE MODAL
-  function openProfile(user){
-    document.getElementById('profileAvatar').textContent=user.name.charAt(0).toUpperCase();
-    document.getElementById('profileAvatar').style.backgroundColor=user.color;
-    document.getElementById('profileName').textContent=user.name;
-    document.getElementById('profileStatus').textContent=`Status: ${user.status}`;
-    document.getElementById('profileModal').classList.remove('hidden');
-  }
-  function closeProfile(){ document.getElementById('profileModal').classList.add('hidden'); }
-
-  // CLEAR ALL
-  function clearAll(){ 
-    if(confirm('Clear all posts, prayers & testimonies?')){
-      posts=[]; prayers=[]; testimonies=[];
-      localStorage.removeItem('posts'); localStorage.removeItem('prayers'); localStorage.removeItem('testimonies');
-      renderFeed();
+    // --- AUTH ---
+    function login() {
+        const name = document.getElementById('nameInput').value.trim();
+        if (!name) return alert("Please enter a name to continue.");
+        currentUser = name;
+        localStorage.setItem('truvine_user', name);
+        location.reload();
     }
-  }
 
-  // RENDER UNIFIED FEED
-  function renderFeed(){
-    const allItems = [...posts.map(p=>({...p,type:'post'})),
-                      ...prayers.map(p=>({...p,type:'prayer'})),
-                      ...testimonies.map(p=>({...p,type:'testimony'}))];
+    function logout() {
+        if(confirm("Logout of TruVine?")) {
+            localStorage.removeItem('truvine_user');
+            location.reload();
+        }
+    }
 
-    allItems.sort((a,b)=>new Date(b.date)-new Date(a.date)); // newest first
+    if (currentUser) {
+        document.getElementById('loginOverlay').style.display = 'none';
+        document.getElementById('userNameDisplay').innerText = currentUser;
+        document.getElementById('userInitial').innerText = currentUser.charAt(0).toUpperCase();
+        document.getElementById('authorName').innerText = currentUser;
+    }
 
-    feedEl.innerHTML = allItems.map((item,i)=>{
-      const cardBg=softBlues[i % softBlues.length];
-      const sim=simulatedUsers[Math.floor(Math.random()*simulatedUsers.length)];
-      const avatarColor=item.user===username?getColorForName(username):sim.color;
-      const status=item.user===username?'online':sim.status;
-      const commentHtml=(item.comments||[]).map(c=>`<div class="ml-4 mt-1 text-gray-700 text-sm"><span class="font-semibold">${c.user}:</span> ${c.text}</div>`).join('');
-      let actionButtons='';
-      if(item.type==='post'){
-        actionButtons=`<button onclick="likeItem(${i})" class="bg-blue-400 text-white px-2 py-1 rounded hover:bg-blue-500">👍 Like (${item.likes||0})</button>
-        <button onclick="shareItem(${i})" class="bg-blue-400 text-white px-2 py-1 rounded hover:bg-blue-500">🔗 Share</button>`;
-      } else if(item.type==='prayer'){
-        actionButtons=`<button onclick="likeItem(${i})" class="bg-blue-400 text-white px-2 py-1 rounded hover:bg-blue-500">👍 Like (${item.likes||0})</button>
-        <button onclick="prayItem(${i})" class="bg-green-400 text-white px-2 py-1 rounded hover:bg-green-500">🙏 Pray (${item.prayedCount||0})</button>`;
-      } else if(item.type==='testimony'){
-        actionButtons=`<button onclick="likeItem(${i})" class="bg-blue-400 text-white px-2 py-1 rounded hover:bg-blue-500">👍 Like (${item.likes||0})</button>
-        <button onclick="shareItem(${i})" class="bg-blue-400 text-white px-2 py-1 rounded hover:bg-blue-500">🔗 Share</button>`;
-      }
+    // --- FEED LOGIC ---
+    function setActiveForm(type) {
+        currentType = type;
+        const box = document.getElementById('formBox');
+        const title = document.getElementById('formTitle');
+        const btn = document.getElementById('submitBtn');
+        const input = document.getElementById('mainInput');
 
-      const contentDisplay=item.type==='testimony'||item.type==='devotion'?item.content:item.content;
+        const styles = {
+            post: { color: '#3b82f6', text: 'Share a Thought', placeholder: 'What is God speaking to you?' },
+            prayer: { color: '#f59e0b', text: 'Prayer Request', placeholder: 'How can we pray for you?' },
+            testimony: { color: '#10b981', text: 'Share a Testimony', placeholder: 'Tell the family about Gods goodness...' }
+        };
 
-      return `<div class="bg-white p-4 rounded-2xl shadow mb-4 border-l-4 border-blue-300" style="background-color:${cardBg}">
-        <div class="flex items-center space-x-2 mb-2 cursor-pointer" onclick="openProfile({name:'${item.user}',color:'${avatarColor}',status:'${status}'})">
-          <div class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold" style="background-color:${avatarColor}">${item.user.charAt(0)}</div>
-          <div>
-            <p class="font-semibold">${item.user}</p>
-            <p class="text-gray-600 text-sm">${timeAgo(item.date)}</p>
-          </div>
-        </div>
-        <p class="mb-2">${contentDisplay}</p>
-        <div class="flex space-x-2">${actionButtons}</div>
-        ${commentHtml}
-      </div>`;
-    }).join('');
-  }
+        box.style.borderColor = styles[type].color;
+        title.innerText = styles[type].text;
+        title.style.color = styles[type].color;
+        btn.style.backgroundColor = styles[type].color;
+        input.placeholder = styles[type].placeholder;
+    }
 
-  // FEED ACTIONS
-  function likeItem(i){ 
-    const allItems=[...posts.map(p=>({...p,type:'post'})), ...prayers.map(p=>({...p,type:'prayer'})), ...testimonies.map(p=>({...p,type:'testimony'}))];
-    const item=allItems[i]; item.likes=(item.likes||0)+1;
-    if(item.type==='post'){ posts=posts.map((p,j)=>j===posts.length-1-i?item:p); localStorage.setItem('posts',JSON.stringify(posts)); }
-    else if(item.type==='prayer'){ prayers=prayers.map((p,j)=>j===prayers.length-1-i?item:p); localStorage.setItem('prayers',JSON.stringify(prayers)); }
-    else if(item.type==='testimony'){ testimonies=testimonies.map((p,j)=>j===testimonies.length-1-i?item:p); localStorage.setItem('testimonies',JSON.stringify(testimonies)); }
+    function submitData() {
+        const content = document.getElementById('mainInput').value.trim();
+        if (!content) return;
+
+        const newItem = {
+            id: Date.now(),
+            user: currentUser,
+            type: currentType,
+            content: content,
+            timestamp: new Date()
+        };
+
+        database.unshift(newItem);
+        localStorage.setItem('truvine_db', JSON.stringify(database));
+        document.getElementById('mainInput').value = "";
+        renderFeed();
+    }
+
+    // --- THE DELETE FUNCTION ---
+    function deleteItem(id) {
+        if(confirm("Are you sure you want to delete this post?")) {
+            database = database.filter(item => item.id !== id);
+            localStorage.setItem('truvine_db', JSON.stringify(database));
+            renderFeed();
+        }
+    }
+
+    function renderFeed() {
+        const feed = document.getElementById('communityFeed');
+        if (database.length === 0) {
+            feed.innerHTML = `<div class="text-center py-20 text-slate-300 font-black uppercase tracking-[0.2em] text-[10px]">The vine is currently quiet.</div>`;
+            return;
+        }
+
+        feed.innerHTML = database.map(item => {
+            // Logic to check if the current user is the author
+            const isOwner = item.user === currentUser;
+            const deleteIcon = isOwner ? 
+                `<button onclick="deleteItem(${item.id})" class="delete-btn material-icons text-sm" title="Delete Post">delete</button>` : '';
+
+            if (item.type === 'prayer') {
+                return `
+                <div class="feed-item bg-amber-50 p-8 rounded-[2.5rem] border-2 border-amber-100 shadow-sm relative">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-3 text-amber-700">
+                            <span class="material-icons text-lg">front_hand</span>
+                            <span class="font-black text-[10px] uppercase tracking-widest">Prayer Request • ${item.user}</span>
+                        </div>
+                        ${deleteIcon}
+                    </div>
+                    <p class="text-xl font-bold text-amber-950 mb-6 leading-relaxed">"${item.content}"</p>
+                    <button class="bg-amber-500 text-white px-6 py-2 rounded-xl font-black text-[10px] uppercase tracking-widest shadow-md">Prayed For This</button>
+                </div>`;
+            } 
+            
+            if (item.type === 'testimony') {
+                return `
+                <div class="feed-item bg-gradient-to-br from-green-600 to-emerald-800 p-1 text-white rounded-[2.5rem] shadow-xl relative">
+                    <div class="bg-slate-900/20 backdrop-blur-sm p-8 rounded-[2.4rem] h-full">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center space-x-2">
+                                <span class="material-icons text-green-300">auto_awesome</span>
+                                <span class="font-black text-[10px] uppercase tracking-[0.2em] text-green-100">VICTORY TESTIMONY</span>
+                            </div>
+                            ${deleteIcon}
+                        </div>
+                        <p class="text-2xl font-serif italic mb-6">"${item.content}"</p>
+                        <p class="text-[10px] font-black text-green-200 uppercase tracking-widest">— Shared by ${item.user}</p>
+                    </div>
+                </div>`;
+            }
+
+            return `
+            <div class="feed-item bg-white p-6 rounded-[2rem] shadow-sm border border-slate-200 relative">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center font-black text-xs text-slate-400 border border-slate-200">${item.user.charAt(0)}</div>
+                        <span class="font-black text-slate-800 text-[10px] uppercase tracking-widest">${item.user}</span>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <span class="text-[9px] font-bold text-slate-300 uppercase">${new Date(item.timestamp).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</span>
+                        ${deleteIcon}
+                    </div>
+                </div>
+                <p class="text-slate-600 font-medium leading-relaxed">${item.content}</p>
+            </div>`;
+        }).join('');
+    }
+
+    // --- HELPERS ---
+    function showDevotion() {
+        const today = new Date().getDay();
+        document.getElementById('devotionText').innerText = devotions[today % devotions.length];
+        document.getElementById('devotionModal').style.display = 'flex';
+    }
+    function closeDevotion() { document.getElementById('devotionModal').style.display = 'none'; }
+    function resetApp() { if(confirm("This will erase ALL data on this device. Continue?")){ localStorage.clear(); location.reload(); } }
+
     renderFeed();
-  }
-  function prayItem(i){ prayers[i].prayedCount=(prayers[i].prayedCount||0)+1; localStorage.setItem('prayers',JSON.stringify(prayers)); renderFeed(); }
-  function shareItem(i){ alert('Shared!') }
-
-  renderFeed();
-
-</script>
+    setActiveForm('post');
+  </script>
 </body>
 </html>
