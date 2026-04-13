@@ -13,6 +13,22 @@
     .video-overlay { background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 100%); opacity: 0; transition: opacity 0.3s; }
     .video-card:hover .video-overlay { opacity: 1; }
     
+
+    .video-grid-container {
+        height: 500px; /* Adjust height as needed */
+        overflow-y: scroll; /* Enable vertical scroll */
+       
+      }
+      
+      .video-grid-container::-webkit-scrollbar {
+        width: 6px;
+      }
+      
+      .video-grid-container::-webkit-scrollbar-thumb {
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 3px;
+      }
+
     @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     .feed-item { animation: slideUp 0.5s ease forwards; }
 
@@ -65,7 +81,7 @@
         <span class="bg-red-600 w-1 h-4 mr-2"></span> Jesus Love Revealed Library
       </h2>
       
-      <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+      <div class="video-grid-container grid grid-cols-2 md:grid-cols-3 gap-4">
         <!-- Video 1-6 Grid -->
 
         <div class="video-card"><div class="video-container"><iframe width="100%" height="315" src="https://www.youtube.com/embed/aeL-AqoGeIc?si=is9TaNR1yUhqqxG8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div></div>
