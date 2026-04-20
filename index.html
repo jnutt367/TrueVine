@@ -61,7 +61,20 @@
   </div>
 
   <main class="max-w-5xl mx-auto p-4 md:py-10">
-   
+   <!-- 🔍 SEARCH BAR (NEW) -->
+<div class="mb-6 bg-white p-4 rounded-2xl shadow-sm border border-slate-200">
+    <input
+      id="searchInput"
+      type="text"
+      placeholder="Search by keyword, author, or type..."
+      oninput="runSearch()"
+      class="w-full bg-slate-50 p-4 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 font-medium"
+    />
+  </div>
+  
+  <!-- FEED -->
+  <div id="communityFeed" class="space-y-6"></div>
+  
     <!-- NETFLIX VIDEO GRID -->
     <section class="mb-16">
       <h2 class="text-sm font-black text-slate-400 uppercase tracking-[0.3em] mb-6 flex items-center">
@@ -294,12 +307,16 @@
 
     function renderFeed() {
         const feed = document.getElementById('communityFeed');
-        if (database.length === 0) {
-            feed.innerHTML = `<div class="text-center py-20 text-slate-300 font-black uppercase tracking-[0.2em] text-[10px]">The vine is currently quiet.</div>`;
-            return;
+        
+        // 🔥 apply search filter from search.js
+        const data = filterDatabase(database);
+        
+        if (data.length === 0) {
+          feed.innerHTML = `<div class="text-center py-20 text-slate-300 font-black uppercase tracking-[0.2em] text-[10px]">No results found.</div>`;
+          return;
         }
-
-        feed.innerHTML = database.map(item => {
+        
+        feed.innerHTML = data.map(item => {
             // Logic to check if the current user is the author
             const isOwner = item.user === currentUser;
             const deleteIcon = isOwner ? 
@@ -366,6 +383,12 @@
     renderFeed();
     setActiveForm('post');
   </script>
+
+
+<!-- 🔥 SCRIPTS -->
+<script src="search.js"></script>
+<script src="app.js"></script>
+
 
   <script type="module">
   // Import the functions you need from the SDKs you need
